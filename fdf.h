@@ -6,7 +6,7 @@
 /*   By: sudaniel <sudaniel@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 06:57:02 by sudaniel          #+#    #+#             */
-/*   Updated: 2024/11/21 11:55:28 by sudaniel         ###   ########.fr       */
+/*   Updated: 2024/11/23 18:13:26 by sudaniel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,19 +34,33 @@ typedef struct s_map
 
 typedef struct s_bline
 {
-	int	x;
-	int	x1;
-	int	y;
-	int	y1;
-	int	z;
-	int z1;
-	int	dx;
-	int	dy;
-	int	sx;
-	int	sy;
-	int	err;
-	int	scale_err;
+	int		x;
+	int		x1;
+	int		y;
+	int		y1;
+	int		z;
+	int		z1;
+	int		dx;
+	int		dy;
+	int		sx;
+	int		sy;
+	int		err;
+	int		scale_err;
 }		t_bline;
+
+typedef struct s_point
+{
+	int	x;
+	int	y;
+}	t_point;
+
+typedef struct s_bline_args
+{
+	int	x;
+	int	y;
+	int	x1;
+	int	y1;
+}	t_bline_args;
 
 // error: Takes an error message, displays it and exits the program.
 void	error(char *error_message);
@@ -55,5 +69,6 @@ void	error(char *error_message);
 // 					to initialize the t_map struct.
 void	get_map_details(char *map, t_map *map_info);
 void	connect_coordinates(t_map *map_info);
-t_bline	initialize_bline(int x, int y, int x1, int y1);
+void	initialize_bline(t_bline_args args, t_map *map_info,
+			t_point **transformed_points);
 #endif

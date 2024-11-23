@@ -6,7 +6,7 @@
 /*   By: sudaniel <sudaniel@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 07:40:08 by sudaniel          #+#    #+#             */
-/*   Updated: 2024/11/21 18:00:55 by sudaniel         ###   ########.fr       */
+/*   Updated: 2024/11/23 18:05:02 by sudaniel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,47 +17,53 @@ static void	three_d(int *x, int *y, int z)
 	int	temp;
 
 	temp = *x;
-	*x = (temp - *y) * cos(0.523599) + WIDTH / 2;
-	*y = (temp + *y) * sin(0.523599) - z + HEIGHT / 2;
+	*x = (temp - *y) * cos(0.8);
+	*y = (temp + *y) * sin(0.523599) - z;
 }
 
-static void	bresenham_line(t_bline *l_p, t_map *map_info)
+static void	pre_transform_points(t_map *map_info, t_point **transformed_points)
 {
-	l_p->z = map_info->points[l_p->y / 20][l_p->x / 20];
-	l_p->z1 = map_info->points[l_p->y1 / 20][l_p->x1 / 20];
-	three_d(&l_p->x, &l_p->y, l_p->z);
-	three_d(&l_p->x1, &l_p->y1, l_p->z1);
-	if (l_p->y >= HEIGHT || l_p->y1 >= HEIGHT
-		|| l_p->x >= WIDTH || l_p->x1 >= WIDTH)
+	int	y;
+	int	x;
+	int	tx;
+	int	ty;
+	int	tz;
+
+	y = 0;
+	while (y < map_info->height)
 	{
-		error("Error: Dimension over monitor's dimension.\n");
-		exit(EXIT_FAILURE);
-	}
-	while (l_p->x != l_p->x1 || l_p->y != l_p->y1)
-	{
-		if (l_p->z)
-			mlx_put_pixel(map_info->mlx_img, l_p->x, l_p->y, 0x00FF00FF);
-		else
-			mlx_put_pixel(map_info->mlx_img, l_p->x, l_p->y, 0xFFFFFFFF);
-		l_p->scale_err = 2 * l_p->err;
-		if (l_p->scale_err > -l_p->dy)
+		x = 0;
+		while (x < map_info->width)
 		{
-			l_p->err -= l_p->dy;
-			l_p->x += l_p->sx;
+			tx = x * 20;
+			ty = y * 20;
+			tz = map_info->points[y][x];
+			three_d(&tx, &ty, tz);
+			transformed_points[y][x].x = tx + WIDTH / 2;
+			transformed_points[y][x].y = ty + HEIGHT / 2;
+			x++;
 		}
-		if (l_p->scale_err < l_p->dx)
-		{
-			l_p->err += l_p->dx;
-			l_p->y += l_p->sy;
-		}
+		y++;
 	}
 }
 
-void	connect_coordinates(t_map *map_info)
+static t_bline_args	init_args(int x, int y, int x1, int y1)
 {
-	int		x;
-	int		y;
-	t_bline	l_p;
+	t_bline_args	args;
+
+	args.x = x;
+	args.y = y;
+	args.x1 = x1;
+	args.y1 = y1;
+	return (args);
+}
+
+static void	obtain_points_and_draw(t_map *map_info,
+		t_point **transformed_points)
+{
+	int				x;
+	int				y;
+	t_bline_args	args;
 
 	y = 0;
 	while (y < map_info->height)
@@ -67,16 +73,45 @@ void	connect_coordinates(t_map *map_info)
 		{
 			if (x < map_info->width - 1)
 			{
-				l_p = initialize_bline(x, y, x + 1, y);
-				bresenham_line(&l_p, map_info);
+				args = init_args(x, y, x + 1, y);
+				initialize_bline(args, map_info, transformed_points);
 			}
 			if (y < map_info->height - 1)
 			{
-				l_p = initialize_bline(x, y, x, y + 1);
-				bresenham_line(&l_p, map_info);
+				args = init_args(x, y, x, y + 1);
+				initialize_bline(args, map_info, transformed_points);
 			}
 			x++;
 		}
 		y++;
 	}
+}
+
+void	connect_coordinates(t_map *map_info)
+{
+	t_point	**transformed_points;
+	int		i;
+
+	transformed_points = (t_point **) malloc(sizeof(t_point *)
+			* map_info->height);
+	if (!transformed_points)
+		error("Error: Malloc failed at connect_coordinates.\n");
+	i = 0;
+	while (i < map_info->height)
+	{
+		transformed_points[i] = malloc(sizeof(t_point) * map_info->width);
+		if (!transformed_points[i++])
+		{
+			while (transformed_points[i--])
+				free(transformed_points[i]);
+			free(transformed_points);
+			error("Error: Malloc failed at connect_coordinates.\n");
+		}
+	}
+	pre_transform_points(map_info, transformed_points);
+	obtain_points_and_draw(map_info, transformed_points);
+	i = 0;
+	while (i < map_info->height)
+		free(transformed_points[i++]);
+	free(transformed_points);
 }
