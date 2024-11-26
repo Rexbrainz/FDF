@@ -6,7 +6,7 @@
 /*   By: sudaniel <sudaniel@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 06:57:02 by sudaniel          #+#    #+#             */
-/*   Updated: 2024/11/23 18:13:26 by sudaniel         ###   ########.fr       */
+/*   Updated: 2024/11/26 12:13:44 by sudaniel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,11 @@
 # include <errno.h>
 # include <fcntl.h>
 # include <math.h>
-# include "new_libft/libft.h"
+# include "libft/libft.h"
 # include "MLX42/include/MLX42/MLX42.h"
-# define WIDTH 1000
-# define HEIGHT 1000
+# define WIDTH 1920
+# define HEIGHT 1080
+# define Z_SCALE 2
 
 typedef struct s_map
 {
@@ -54,13 +55,24 @@ typedef struct s_point
 	int	y;
 }	t_point;
 
-typedef struct s_bline_args
+typedef struct s_point_args
 {
 	int	x;
 	int	y;
 	int	x1;
 	int	y1;
-}	t_bline_args;
+}	t_point_args;
+
+typedef struct scale
+{
+	int	tx;
+	int	ty;
+	int	tz;
+	int	scale_f;
+	int	center_x;
+	int	center_y;
+	int	z_scale;
+}		t_scale;
 
 // error: Takes an error message, displays it and exits the program.
 void	error(char *error_message);
@@ -69,6 +81,8 @@ void	error(char *error_message);
 // 					to initialize the t_map struct.
 void	get_map_details(char *map, t_map *map_info);
 void	connect_coordinates(t_map *map_info);
-void	initialize_bline(t_bline_args args, t_map *map_info,
-			t_point **transformed_points);
+void	initialize_bline(t_point_args args,
+			t_map *map_info, t_point **transformed_points);
+int		get_min(int w_width, int w_height, int f_width, int f_height);
+
 #endif
