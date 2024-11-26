@@ -6,7 +6,7 @@
 /*   By: sudaniel <sudaniel@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 07:40:08 by sudaniel          #+#    #+#             */
-/*   Updated: 2024/11/26 12:12:37 by sudaniel         ###   ########.fr       */
+/*   Updated: 2024/11/26 17:00:32 by sudaniel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	pre_transform_points(t_map *map_info, t_point **transformed_points)
 	int		y;
 	int		x;
 
-	scale.scale_f = get_min(WIDTH, HEIGHT, map_info->width, map_info->height);
+	scale.scale_f = get_scale_value(map_info->height);
 	scale.center_x = WIDTH / 2 - (map_info->width / 2) * scale.scale_f;
 	scale.center_y = HEIGHT / 2 - (map_info->height / 2) * scale.scale_f;
 	if (map_info->width >= 50)

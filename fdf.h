@@ -6,7 +6,7 @@
 /*   By: sudaniel <sudaniel@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 06:57:02 by sudaniel          #+#    #+#             */
-/*   Updated: 2024/11/26 12:13:44 by sudaniel         ###   ########.fr       */
+/*   Updated: 2024/11/26 17:08:06 by sudaniel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ typedef struct scale
 	int	scale_f;
 	int	center_x;
 	int	center_y;
-	int	z_scale;
 }		t_scale;
 
 // error: Takes an error message, displays it and exits the program.
@@ -80,9 +79,19 @@ void	error(char *error_message);
 // get_map_details:	Takes a valid map, and the t_map struct. it uses the map
 // 					to initialize the t_map struct.
 void	get_map_details(char *map, t_map *map_info);
+
+//	connect_coordinates: Takes the map info, applies isometric view to them
+//						 and draw lines between points.
 void	connect_coordinates(t_map *map_info);
+
+//	initialize_bline:	Takes the points, initialized in args, the map_info and
+//						the transformed points, to initialze the necessary
+//						variables for the bresenham line algorithm.
 void	initialize_bline(t_point_args args,
 			t_map *map_info, t_point **transformed_points);
-int		get_min(int w_width, int w_height, int f_width, int f_height);
+
+//	get_scale_value: Takes the map_height, and returns a scaling value based on
+//					 the range the map_height falls in.
+int		get_scale_value(int f_height);
 
 #endif

@@ -6,28 +6,22 @@
 /*   By: sudaniel <sudaniel@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 12:00:57 by sudaniel          #+#    #+#             */
-/*   Updated: 2024/11/26 12:55:20 by sudaniel         ###   ########.fr       */
+/*   Updated: 2024/11/26 17:00:07 by sudaniel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int	get_min(int w_width, int w_height, int f_width, int f_height)
+int	get_scale_value(int f_height)
 {
-	double	min_w;
-	double	min_h;
-
 	if (f_height > 300)
 		return (2);
-	else if (f_height >= 100)
-		return (4);
-	else if (f_height >= 10)
-		return (20);
-	min_w = (double)(w_width - 100) / (f_width - 1) * 0.4;
-	min_h = (double)(w_height - 50) / (f_height - 1) * 0.4;
-	if (min_w > min_h)
-		return ((int) min_h);
-	return ((int) min_w);
+	else if (f_height > 100)
+		return (5);
+	else if (f_height > 50)
+		return (10);
+	else
+		return (30);
 }
 
 static int	my_abs(int value)
@@ -54,7 +48,7 @@ void	bresenham_line(t_bline *l_p, t_map *map_info)
 			|| l_p->y < 0 || l_p->y1 < 0
 			|| l_p->x < 0 || l_p->x1 < 0)
 			break ;
-		if (l_p->z || l_p->z1)
+		if (l_p->z > 0 || l_p->z1 > 0)
 			mlx_put_pixel(map_info->mlx_img, l_p->x, l_p->y, 0x00FF00FF);
 		else
 			mlx_put_pixel(map_info->mlx_img, l_p->x, l_p->y, 0xFFFFFFFF);
