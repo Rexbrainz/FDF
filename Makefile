@@ -1,14 +1,18 @@
-NAME	:= Game
+#*************************************************************************************************#
+#												FDF                                               #
+#*************************************************************************************************#
+
+NAME	:= fdf
 CFLAGS	:= -Wextra -Wall -Werror -g -Wunreachable-code -Ofast
-LIBMLX	:= MLX42
-LIBFT_DIR := new_libft
+LIBMLX	:= ./MLX42
+LIBFT_DIR := ./libft
 LIBFT := $(LIBFT_DIR)/libft.a
 HEADERS	:= -I $(LIBFT_DIR)/include -I $(LIBMLX)/include
 LIBS	:= $(LIBMLX)/build/libmlx42.a $(LIBFT) -ldl -lglfw -pthread -lm
-SRCS	:= get_coordinates.c main.c error.c connect_coordinates.c fdf_utils.c
+SRCS	:= get_coordinates.c main.c connect_coordinates.c bresenham_line.c
 OBJS	:= ${SRCS:.c=.o}
 
-all: libmlx $(NAME) $(LIBFT)
+all: libmlx $(LIBFT) $(NAME)
 
 libmlx:
 	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4

@@ -6,11 +6,21 @@
 /*   By: sudaniel <sudaniel@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 06:49:13 by sudaniel          #+#    #+#             */
-/*   Updated: 2024/11/18 18:16:20 by sudaniel         ###   ########.fr       */
+/*   Updated: 2024/11/25 17:50:24 by sudaniel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+
+static void	free_points(char **points)
+{
+	int	i;
+
+	i = 0;
+	while (points[i])
+		free(points[i++]);
+	free(points);
+}
 
 static void	get_map_dimension(char	*map, t_map *map_info)
 {
@@ -24,7 +34,7 @@ static void	get_map_dimension(char	*map, t_map *map_info)
 	if (fd < 0)
 		error("Error: File cannot be opened at get_map_height.\n");
 	line = get_next_line(fd);
-	if (!line || !(*line >= '0' && *line <= '9'))
+	if (!line)
 		error("Error: Invalid file content.\n");
 	points = ft_split(line, ' ');
 	if (!points)
@@ -37,6 +47,7 @@ static void	get_map_dimension(char	*map, t_map *map_info)
 		free(line);
 		line = get_next_line(fd);
 	}
+	free_points(points);
 	close(fd);
 }
 
@@ -48,7 +59,7 @@ static void	allocate_memory(t_map *map_info)
 	if (!map_info->points)
 		error("Error: Memory failed.\n");
 	index = 0;
-	while (index <= map_info->height)
+	while (index < map_info->height)
 	{
 		map_info->points[index] = (int *) malloc(sizeof(int) * map_info->width);
 		if (!map_info->points[index])
@@ -60,7 +71,6 @@ static void	allocate_memory(t_map *map_info)
 		}
 		index++;
 	}
-	map_info->points[index] = NULL;
 }
 
 static void	get_map_points(char *line, t_map *map_info)
