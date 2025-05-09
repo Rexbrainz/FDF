@@ -6,14 +6,21 @@
 /*   By: sudaniel <sudaniel@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 13:02:59 by sudaniel          #+#    #+#             */
-/*   Updated: 2024/11/26 12:50:32 by sudaniel         ###   ########.fr       */
+/*   Updated: 2024/11/27 09:21:32 by sudaniel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	error(char *error_message)
+void	error(const char *error_message)
 {
+	ft_printf(error_message);
+	exit(EXIT_FAILURE);
+}
+
+void	dealloc_and_error(const char *error_message, t_map *map_info)
+{
+	free_memory(map_info);
 	ft_printf(error_message);
 	exit(EXIT_FAILURE);
 }
@@ -24,7 +31,7 @@ static void	escape(mlx_key_data_t keydata, void *param)
 		mlx_close_window(param);
 }
 
-static void	free_memory(t_map *map_info)
+void	free_memory(t_map *map_info)
 {
 	int	i;
 
@@ -51,10 +58,10 @@ int	main(int argc, char **argv)
 	get_map_details(argv[1], &map_info);
 	mlx = mlx_init(WIDTH, HEIGHT, "FDF", true);
 	if (!mlx)
-		error("Error: Mlx could not be initialized\n");
+		dealloc_and_error("Error: Mlx could not be initialized\n", &map_info);
 	map_info.mlx_img = mlx_new_image(mlx, WIDTH, HEIGHT);
 	if (!map_info.mlx_img)
-		error("Error: Image could not be created\n");
+		dealloc_and_error("Error: Image could not be created\n", &map_info);
 	mlx_image_to_window(mlx, map_info.mlx_img, 0, 0);
 	connect_coordinates(&map_info);
 	mlx_key_hook(mlx, escape, mlx);

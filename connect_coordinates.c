@@ -6,7 +6,7 @@
 /*   By: sudaniel <sudaniel@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 07:40:08 by sudaniel          #+#    #+#             */
-/*   Updated: 2024/11/26 17:00:32 by sudaniel         ###   ########.fr       */
+/*   Updated: 2025/01/11 17:13:42 by sudaniel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	pre_transform_points(t_map *map_info, t_point **transformed_points)
 	scale.scale_f = get_scale_value(map_info->height);
 	scale.center_x = WIDTH / 2 - (map_info->width / 2) * scale.scale_f;
 	scale.center_y = HEIGHT / 2 - (map_info->height / 2) * scale.scale_f;
-	if (map_info->width >= 50)
+	if (map_info->width >= 40)
 		scale.center_x += 400;
 	y = 0;
 	while (y < map_info->height)
@@ -98,7 +98,7 @@ void	connect_coordinates(t_map *map_info)
 	transformed_points = (t_point **) malloc(sizeof(t_point *)
 			* map_info->height);
 	if (!transformed_points)
-		error("Error: Malloc failed at connect_coordinates.\n");
+		dealloc_and_error("Error: Malloc failed.\n", map_info);
 	i = 0;
 	while (i < map_info->height)
 	{
@@ -108,7 +108,7 @@ void	connect_coordinates(t_map *map_info)
 			while (transformed_points[i--])
 				free(transformed_points[i]);
 			free(transformed_points);
-			error("Error: Malloc failed at connect_coordinates.\n");
+			dealloc_and_error("Error: Malloc failed.\n", map_info);
 		}
 	}
 	pre_transform_points(map_info, transformed_points);

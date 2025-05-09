@@ -6,7 +6,7 @@
 /*   By: sudaniel <sudaniel@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 06:49:13 by sudaniel          #+#    #+#             */
-/*   Updated: 2024/11/25 17:50:24 by sudaniel         ###   ########.fr       */
+/*   Updated: 2024/12/11 16:24:50 by sudaniel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ static void	get_map_points(char *line, t_map *map_info)
 	static int	i;
 
 	char_points = ft_split(line, ' ');
+	if (!char_points)
+		error("Malloc failed.\n");
 	j = 0;
 	while (j < map_info->width)
 	{
@@ -96,7 +98,6 @@ void	get_map_details(char *map, t_map *map_info)
 {
 	int		fd;
 	char	*line;
-	int		i;
 
 	get_map_dimension(map, map_info);
 	if (map_info->height == -1 || map_info->width == -1)
@@ -105,7 +106,6 @@ void	get_map_details(char *map, t_map *map_info)
 	fd = open(map, O_RDONLY, 0);
 	if (fd < 0)
 		error("Error: File cannot be opened at get_map_details.\n");
-	i = 0;
 	while (1)
 	{
 		line = get_next_line(fd);

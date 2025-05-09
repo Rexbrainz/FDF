@@ -6,7 +6,7 @@
 /*   By: sudaniel <sudaniel@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 06:57:02 by sudaniel          #+#    #+#             */
-/*   Updated: 2024/11/26 17:08:06 by sudaniel         ###   ########.fr       */
+/*   Updated: 2025/01/11 17:23:16 by sudaniel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include "MLX42/include/MLX42/MLX42.h"
 # define WIDTH 1920
 # define HEIGHT 1080
-# define Z_SCALE 2
+# define Z_SCALE 10
 
 typedef struct s_map
 {
@@ -74,7 +74,12 @@ typedef struct scale
 }		t_scale;
 
 // error: Takes an error message, displays it and exits the program.
-void	error(char *error_message);
+void	error(const char *error_message);
+
+//	dealloc_and_error:	Another variant of error, this time it takes
+//						the error message and a pointer to the 
+//						allocated memory which it frees.
+void	dealloc_and_error(const char *error_message, t_map *map_info);
 
 // get_map_details:	Takes a valid map, and the t_map struct. it uses the map
 // 					to initialize the t_map struct.
@@ -93,5 +98,8 @@ void	initialize_bline(t_point_args args,
 //	get_scale_value: Takes the map_height, and returns a scaling value based on
 //					 the range the map_height falls in.
 int		get_scale_value(int f_height);
+
+//	free_memory:	Takes the map_info and frees the memory space allocated.
+void	free_memory(t_map *map_info);
 
 #endif
